@@ -1,0 +1,21 @@
+{
+    "base_mesh": "data/custom_data/zy_marking1/preprocessed/meshes/zy_marking1.obj",
+    "ref_mesh": "data/custom_data/zy_marking1/preprocessed",
+    "random_textures": true,
+    "iter": 5000,
+    "save_interval": 200,
+    "texture_res": [1024, 1024],
+    "train_res": [1024, 1024],
+    "batch": 4,
+    "learning_rate": [0.03, 0.01],
+    "kd_min" : [0.03, 0.03, 0.03],
+    "kd_max" : [0.8, 0.8, 0.8],
+    "ks_min" : [0, 0.08, 0],
+    "ks_max" : [0.0, 1.0, 1.0],
+    "dmtet_grid" : 64,
+    "mesh_scale" : 2.5,
+    "camera_space_light" : true,
+    "background" : "white",
+    "display" : [{"latlong" : true}, {"bsdf":"kd"}, {"bsdf":"ks"}, {"bsdf" : "normal"}],
+    "out_dir": "mydata_zy_marking1"
+}

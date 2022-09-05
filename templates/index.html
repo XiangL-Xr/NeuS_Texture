@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自动化三维重建页面</title>
+    <style type="text/css">
+        p input{
+            width: 170px;
+            margin-right: 70px;
+        }
+        p input[type="text"]{
+            width: 160px;
+        }
+    </style>
+</head>
+
+<body>
+    <label for="des">基于神经渲染的自动化三维重建接口</label>
+    <br>
+    <br>
+    <div>
+    <pre>
+    数据说明：
+        
+        -1- 同一商品或场景的不同视角照片，数量应在100-200张左右；
+        -2- 相邻两个视角照片之间的水平角度差不超过20度；
+        -3- 若采用环拍方式，应采集不同的仰角或俯角，垂直角度差不超过30度，环拍的圈数不少于2圈；
+        -4- 多视角照片的分辨率不低于1024*1024；
+        -5- 对所有照片进行抠图处理，并保存单通道mask，mask文件名应与图片名一一对应。
+
+    参数说明：
+    
+        -- 多视图数据: 必须上传，用于商品或场景重建的多视角图片数据，格式为.zip压缩包；
+                       该压缩包内必须包含images与masks两个子文件夹，分别存放三通道RGB图片与抠图处理后的单通道黑白mask。
+    
+        -- 待重建阶段: 选填，默认为空，表示自动化三维重建过程一键完成；
+                       若选择该参数，则执行单步重建，根据选择的重建阶段执行对应的重建过程。
+                
+    </pre>
+    </div>
+
+    <div>
+        <script>
+            function m_submit(){
+                alert('提交成功,自动化重建过程可能花费5~6小时, 请耐心等待...')
+                return True
+            }
+        </script>
+        <form action="http://10.148.12.100:10423/api/neus_texture/auto_reconstruct" method="post" enctype="multipart/form-data" onsubmit="return m_submit()">
+
+            <p>多视图数据 <input type="file" size="20" name="file"/>   ## 请选择.zip格式的压缩包文件,必须包含images与masks两个子文件夹</p >
+            <p>待重建阶段 <input type="text" size="20" name="state"/>  ## 可选项: [colmap, train, validate, texture], 默认为空</p >
+            <input type="submit" value="开始重建" style="margin-top:15px;">
+            <pre>注：重建完成后，输出结果将被打包为zip格式文件，并自动完成下载</pre>
+     
+        </form>
+    </div>
+ 
+</body>
+</html>

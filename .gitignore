@@ -1,0 +1,7 @@
+/data
+/final_out
+/.download_zips
+/.Exp
+/.idea/
+*/__pycache__
+*.pyc
