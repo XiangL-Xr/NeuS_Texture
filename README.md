@@ -7,7 +7,9 @@
   $ sh apt_install.sh
 
  ### b. ceres-solver-1.14.0 install
-  $ 下载地址: https://codeload.github.com/ceres-solver/ceres-solver/tar.gz/refs/tags/1.14.0  
+  $ 下载地址: https://codeload.github.com/ceres-solver/ceres-solver/tar.gz/refs/tags/1.14.0   
+  $ tar -zxvf ceres-solver-1.14.0.tar.gz  
+  $ cd ceres-solver-1.14.0    
   $ mkdir build   
   $ cd build   
   $ cmake ..   
