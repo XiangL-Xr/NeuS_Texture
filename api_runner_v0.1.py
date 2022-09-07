@@ -160,11 +160,12 @@ def auto_reconstruct():
         make_zip(out_folder, os.path.join(down_zip_folder, zip_name))
         
         ## 下载文件
-        response = make_response(send_from_directory(os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], date_name), zip_name, as_attachment=True))
+        # response = make_response(send_from_directory(os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], date_name), zip_name, as_attachment=True))
         # response.headers["filename"] = "{}".format(zip_name)
-        #response = make_response(open(os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], date_name, zip_name), 'rb').read())
+        # response = make_response(open(os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], date_name, zip_name), 'rb').read())
 
-        return response
+        # return response
+        return {"code": '200', "data": os.path.join(down_zip_folder, zip_name), "message": "Auto reconstruction successful!"}
 
     else:
         return {"code": '503', "data": "", "message": "only support post method!"}

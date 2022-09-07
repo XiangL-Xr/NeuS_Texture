@@ -12,7 +12,7 @@
   $ cd ceres-solver-1.14.0    
   $ mkdir build   
   $ cd build   
-  $ cmake ..   
+  $ cmake ..    
   $ make -j8 
   $ make install    
 
