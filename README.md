@@ -13,7 +13,7 @@
   $ mkdir build   
   $ cd build   
   $ cmake ..    
-  $ make -j8 
+  $ make -j8   
   $ make install    
 
  ### c. colmap-3.8 install
