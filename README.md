@@ -39,5 +39,6 @@
 
 ## step 03: API start
   $ git clone https://github.com/XiangL-Xr/NeuS_Texture.git  
+  $ pip install flask   
   $ cd NeuS_Texture  
   $ python api_runner_v0.1.py  
