@@ -289,6 +289,27 @@ def download_file():
     else:
         return {"code": '503', "data": "", "message": "only support post method!"}
 
+@app.route('/api/neus_texture/download', methods=['GET', 'POST'])
+def download():
+    """
+        文件下载
+    """
+    Timelist = []
+    Folder_Name = []
+    Files_Name = []
+    
+    file_lists = os.listdir(app.config['DOWNLOAD_ZIP_FOLDER'] + '/')   # 获取指定文件夹下所有文件
+    for i in file_lists:                                               # 遍历文件下下所有文件
+        Timelist.append(time.ctime(os.path.getatime(app.config['DOWNLOAD_ZIP_FOLDER'] + '/' + i)))
+    
+    for k in range(len(file_lists)):                                   # 遍历文件夹下所有文件
+        Files_Name.append(file_lists[k])
+        Folder_Name.append(file_lists[k] + "----------------------------" + Timelist[k])
+    
+    print(app.config['DOWNLOAD_ZIP_FOLDER'])
+
+    return render_template('download.html', alllname=Folder_Name, name=Files_Name)
+
 
 if __name__ == '__main__':
     
