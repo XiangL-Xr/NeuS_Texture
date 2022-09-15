@@ -22,7 +22,7 @@ app.config['UPLOAD_FOLDER'] = './data/'
 app.config['RESULTS_FOLDER'] = './final_out/'
 
 ## 设置待下载文件压缩包存放路径
-app.config['DOWNLOAD_ZIP_FOLDER'] = '.download_zips'
+app.config['DOWNLOAD_ZIP_FOLDER'] = './download_zips'
 os.makedirs(app.config['DOWNLOAD_ZIP_FOLDER'], exist_ok=True)
 
 ## 设置允许上传的文件格式
@@ -78,7 +78,7 @@ def index():
 
 
 ## 自动化三维重建
-@app.route('/api/neus_texture/auto_reconstruct', methods=['POST', 'GET'])
+@app.route('/api/auto_reconstruct', methods=['POST', 'GET'])
 def auto_reconstruct():
     if request.method == 'POST':
         file_data = request.files.get('file')
@@ -159,21 +159,34 @@ def auto_reconstruct():
             os.makedirs(down_zip_folder, exist_ok=True)
         make_zip(out_folder, os.path.join(down_zip_folder, zip_name))
         
-        ## 下载文件
-        # response = make_response(send_from_directory(os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], date_name), zip_name, as_attachment=True))
-        # response.headers["filename"] = "{}".format(zip_name)
-        # response = make_response(open(os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], date_name, zip_name), 'rb').read())
-
-        # return response
         return {"code": '200', "data": os.path.join(down_zip_folder, zip_name), "message": "Auto reconstruction successful!"}
 
     else:
         return {"code": '503', "data": "", "message": "only support post method!"}
 
+## 结果文件下载
+@app.route('/api/auto_reconstruct/download_file', methods=['GET', 'POST'])
+def download_file():
+    if request.method == 'POST':
+
+        final_zipname = request.form.get('f_name')
+        final_zipdate = request.form.get('f_date')
+
+        ## 根据指定的文件名与日期，判断该文件是否存在，存在则下载，不存在则返回提示信息
+        download_zip_name   = final_zipname + '.zip'
+        downlowd_zip_folder = os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], final_zipdate)
+
+        if not os.path.exists(os.path.join(downlowd_zip_folder, download_zip_name)):
+            return {"code": '404', "data": "NOT FOUND", "message": "The requested resource does not exist!"}         # 判断待下载文件是否存在
+        else:
+            return make_response(send_from_directory(downlowd_zip_folder, download_zip_name, as_attachment=True))    # 存在则下载文件
+    
+    else:
+        return {"code": '503', "data": "", "message": "only support post method!"}
 
 
 ## 上传数据
-@app.route('/api/neus_texture/upload_data', methods=['POST', 'GET'])
+@app.route('/api/auto_reconstruct/upload_data', methods=['POST', 'GET'])
 def upload_data():
     if request.method == 'POST':
         filedata = request.files.get('file')                                             # 获取post过来的文件
@@ -197,8 +210,8 @@ def upload_data():
         return {"code": '503', "data": "", "message": "only support post method!"}
 
 
-# ## 多视图三维重建及贴图生成
-@app.route('/api/neus_texture/reconstruct', methods=['POST', 'GET'])
+## 多视图三维重建及贴图生成
+@app.route('/api/auto_reconstruct/reconstruct', methods=['POST', 'GET'])
 def NeuS_Texture():
     if request.method == 'POST':
         # case_name = request.json.get('case_name')
@@ -262,53 +275,6 @@ def NeuS_Texture():
 
     else:
         return {"code": '503', "data": "", "message": "only support post method!"}
-
-
-@app.route('/api/neus_texture/download_files', methods=['GET', 'POST'])
-def download_file():
-    if request.method == 'POST':
-        print('=' * 70)
-        base_folder = os.path.join(app.config['UPLOAD_FOLDER'], time.strftime('%Y-%m-%d'))
-        case_name = find_newest_folder(base_folder).split('/')[-1]
-
-        ## 根据指定的下载类型，选择待下载文件路径
-        files_dir = os.path.join(app.config['RESULTS_FOLDER'], case_name)
-        zip_name = case_name + '.zip'
-
-        ## 将待下载的所有文件打包为zip文件
-        make_zip(files_dir, os.path.join(app.config['DOWNLOAD_ZIP_FOLDER'], zip_name))
-        
-        ## 下载文件
-        response = make_response(send_from_directory(app.config['DOWNLOAD_ZIP_FOLDER'], zip_name, as_attachment=True))
-        response.headers["filename"] = "{}".format(zip_name)
-
-        # return send_file(memory_file, download_name=zip_name, mimetype='zip', as_attachment=True)
-        
-        return response
-    
-    else:
-        return {"code": '503', "data": "", "message": "only support post method!"}
-
-@app.route('/api/neus_texture/download', methods=['GET', 'POST'])
-def download():
-    """
-        文件下载
-    """
-    Timelist = []
-    Folder_Name = []
-    Files_Name = []
-    
-    file_lists = os.listdir(app.config['DOWNLOAD_ZIP_FOLDER'] + '/')   # 获取指定文件夹下所有文件
-    for i in file_lists:                                               # 遍历文件下下所有文件
-        Timelist.append(time.ctime(os.path.getatime(app.config['DOWNLOAD_ZIP_FOLDER'] + '/' + i)))
-    
-    for k in range(len(file_lists)):                                   # 遍历文件夹下所有文件
-        Files_Name.append(file_lists[k])
-        Folder_Name.append(file_lists[k] + "----------------------------" + Timelist[k])
-    
-    print(app.config['DOWNLOAD_ZIP_FOLDER'])
-
-    return render_template('download.html', alllname=Folder_Name, name=Files_Name)
 
 
 if __name__ == '__main__':

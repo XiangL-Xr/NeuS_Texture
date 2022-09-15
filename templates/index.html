@@ -12,11 +12,15 @@
         p input[type="text"]{
             width: 160px;
         }
+        a {
+            text-decoration: none;
+            color: #f30c0c;
+        }
     </style>
 </head>
 
 <body>
-    <label for="des">基于神经渲染的自动化三维重建接口</label>
+    <label for="des"># 基于神经渲染的自动化三维重建接口</label>
     <br>
     <br>
     <div>
@@ -47,15 +51,29 @@
                 return True
             }
         </script>
-        <form action="/api/neus_texture/auto_reconstruct" method="post" enctype="multipart/form-data" onsubmit="return m_submit()">
+        <form action="/api/auto_reconstruct" method="post" enctype="multipart/form-data" onsubmit="return m_submit()">
 
             <p>多视图数据 <input type="file" size="20" name="file"/>   ## 请选择.zip格式的压缩包文件,必须包含images与masks两个子文件夹</p >
             <p>待重建阶段 <input type="text" size="20" name="state"/>  ## 可选项: [colmap, train, validate, texture], 默认为空</p >
             <input type="submit" value="开始重建" style="margin-top:15px;">
-            <pre>注：重建开始后可关闭此页面，重建完成后输出结果会被存储在后台，请联系算法组李翔获取</pre>
+            <pre><a>注：重建开始后可关闭此页面，重建完成后请使用如下所示的文件下载接口对重建结果进行下载！</a></pre>
      
         </form>
     </div>
+
+    <br>
+    <br>
+    <label for="res"># 文件下载接口</label>
+    <div>
+        <form action="/api/auto_reconstruct/download_file" method="post" enctype="multipart/form-data">
+
+            <p>文件名称： <input type="text" size="20" name="f_name"/>   ## 必填项，请填写需要下载的文件名，即重建时上传的zip文件名(例：my_test)</p >
+            <p>重建日期： <input type="text" size="20" name="f_date"/>   ## 必填项，请填写提交自动化重建任务的日期，格式为，xxxx-xx-xx(例：2022-09-15)</p >
+            <input type="submit" value="开始下载" style="margin-top:15px;">
+     
+        </form>
+    </div>
+
  
 </body>
 </html>

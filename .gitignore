@@ -1,9 +1,10 @@
 /data/2022-*
 /data/zy_*
 /final_out
-/.download_zips
+/download_zips
 /.Exp
 /.idea/
 */__pycache__
 *.pyc
 /api_runner_v0.0.py
+/configs/json_confs
